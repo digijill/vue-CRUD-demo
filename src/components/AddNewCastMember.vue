@@ -28,11 +28,17 @@ export default {
     })
 
     const addNewMember = () => {
-      context.emit('create-member', member.value)
+      if ((member.value.name !== '') && (member.value.username !== '') && (member.value.email !== '')) {
+        context.emit('create-member', {
+          name: member.value.name,
+          username: member.value.username,
+          email: member.value.email
+        })
 
-      member.value.name = ''
-      member.value.username = ''
-      member.value.email = ''
+        member.value.name = ''
+        member.value.username = ''
+        member.value.email = ''
+      }
     }
 
     return { member, addNewMember }
