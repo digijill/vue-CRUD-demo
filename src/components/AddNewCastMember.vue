@@ -11,36 +11,74 @@
     <input type="email" id="newEmail" v-model='member.email' placeholder="Enter email..." />
 
     <button v-on:click='addNewMember'>Add Cast Member</button>
-</div>    
+</div>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity'
 
 export default {
-    name: 'AddNewCastMember',
-    emits: ['create-member'],
-    setup (props, context) {
-        const member = ref({
-            name: '',
-            username: '',
-            email: ''
-        })
+  name: 'AddNewCastMember',
+  emits: ['create-member'],
+  setup (props, context) {
+    const member = ref({
+      name: '',
+      username: '',
+      email: ''
+    })
 
-        const addNewMember = () => {
-            context.emit('create-member', member.value)
+    const addNewMember = () => {
+      context.emit('create-member', member.value)
 
-            member.value.name = ''
-            member.value.username = ''
-            member.value.email = ''
-        }
-
-        return { member, addNewMember }
+      member.value.name = ''
+      member.value.username = ''
+      member.value.email = ''
     }
+
+    return { member, addNewMember }
+  }
 }
 
 </script>
 
 <style scoped>
+h1 {
+  margin-top: 0.5rem;
+}
 
+label {
+  float: left;
+  width: 30vw;
+  margin-top: 1rem;
+  padding: 0.5rem;
+}
+
+input[type=text] {
+  margin-left: auto;
+}
+
+input, button {
+  float: left;
+  width: 60vw;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  font-size: 1.1rem;
+}
+
+button:focus {
+  border-color:#333;
+}
+
+button {
+  float: none;
+  width: 30vw;
+  background-color: #4CAF50;
+  color: white;
+  padding: 0.5rem 1.0rem;
+  margin: 0.5rem auto;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.3rem;
+}
 </style>

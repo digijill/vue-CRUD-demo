@@ -25,6 +25,9 @@ export default ({
 </script>
 
 <style scoped>
+table {
+    margin: 2rem auto 4rem;
+}
 td, th {
   border: 1px solid #ddd;
   padding: 8px;

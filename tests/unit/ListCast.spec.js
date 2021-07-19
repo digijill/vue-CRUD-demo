@@ -2,31 +2,31 @@ import { shallowMount } from '@vue/test-utils'
 import ListCast from '@/components/ListCast.vue'
 
 describe('ListCast.vue Test', () => {
-    it('renders a table of users when component is created', () => {
-        const wrapper = shallowMount(ListCast, {
-            propsData: {
-                cast: [
-                    {
-                      id: 1,
-                      name: 'Bill Murray',
-                      username: 'ahowitzerjr',
-                      email: 'ahowitzerjr@gmail.com'
-                    },
-                    {
-                      id: 2,
-                      name: 'Frances McDormond',
-                      username: 'lkrementz',
-                      email: 'lkrementz@gmail.com'
-                    },
-                    {
-                      id: 3,
-                      name: 'Tilda Swinton',
-                      username: 'jberensen',
-                      email: 'jberensen@gmail.com'
-                    }
-                  ]
-            }
-        })
+  it('renders a table of users when component is created', () => {
+    const wrapper = shallowMount(ListCast, {
+      propsData: {
+        cast: [
+          {
+            id: 1,
+            name: 'Bill Murray',
+            username: 'ahowitzerjr',
+            email: 'ahowitzerjr@gmail.com'
+          },
+          {
+            id: 2,
+            name: 'Frances McDormond',
+            username: 'lkrementz',
+            email: 'lkrementz@gmail.com'
+          },
+          {
+            id: 3,
+            name: 'Tilda Swinton',
+            username: 'jberensen',
+            email: 'jberensen@gmail.com'
+          }
+        ]
+      }
+    })
 
     const tableColumns = wrapper.findAll('th')
     expect(tableColumns.length).toEqual(4)
@@ -45,5 +45,5 @@ describe('ListCast.vue Test', () => {
     expect(tableData[5].text()).toMatch('Frances McDormond')
     expect(tableData[6].text()).toMatch('lkrementz')
     expect(tableData[7].text()).toMatch('lkrementz@gmail.com')
-    })
+  })
 })

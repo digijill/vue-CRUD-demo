@@ -2,17 +2,20 @@
     <div class="content-container">
         <h1>{{ message }} </h1>
         <app-list-cast v-bind:cast="cast"></app-list-cast>
+        <app-add-new-member v-on:create-member="createMember"></app-add-new-member>
     </div>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity'
 import ListCast from './ListCast.vue'
+import AddNewCastMember from './AddNewCastMember.vue'
 
 export default {
   name: 'Content',
   components: {
-    'app-list-cast': ListCast
+    'app-list-cast': ListCast,
+    'app-add-new-member': AddNewCastMember
   },
   setup () {
     const message = ref('Cast of The French Dispatch')
@@ -37,7 +40,20 @@ export default {
       }
     ])
 
-    return { message, cast }
+    const createMember = (member) => {
+      if ((member.name !== '') && (member.username !== '') && (member.email !== '')) {
+        var newMember = {
+          id: cast.value.length + 1,
+          name: member.name,
+          username: member.username,
+          email: member.email
+        }
+
+        cast.value.push(newMember)
+      }
+    }
+
+    return { message, cast, createMember }
   }
 }
 </script>
