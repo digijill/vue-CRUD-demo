@@ -1,8 +1,9 @@
 <template>
     <div class="content-container">
+      <app-banner v-bind:bannerMessage='messageToDisplay' v-bind:bannerType='messageType' v-on:clear-banner='clearMessage'></app-banner>
         <h1>{{ message }} </h1>
-        <app-list-cast v-bind:cast="cast"></app-list-cast>
-        <app-add-new-member v-on:create-member="createMember"></app-add-new-member>
+        <app-list-cast v-bind:cast='cast'></app-list-cast>
+        <app-add-new-member v-on:create-member='createMember'></app-add-new-member>
     </div>
 </template>
 
@@ -10,6 +11,7 @@
 import { ref } from '@vue/reactivity'
 import ListCast from './ListCast.vue'
 import AddNewCastMember from './AddNewCastMember.vue'
+import Banner from './Banner.vue'
 import { onBeforeMount, onBeforeUnmount, onMounted, onUnmounted } from '@vue/runtime-core'
 import axios from 'axios'
 
@@ -17,7 +19,8 @@ export default {
   name: 'Content',
   components: {
     'app-list-cast': ListCast,
-    'app-add-new-member': AddNewCastMember
+    'app-add-new-member': AddNewCastMember,
+    'app-banner': Banner
   },
   setup () {
     const message = ref('Cast of The French Dispatch')
@@ -28,6 +31,9 @@ export default {
     // * username: string
     // * email: string
     const cast = ref([])
+
+    let messageToDisplay = ref('')
+    const messageType = ref('Info')
 
     const createMember = (member) => {
       if ((member.name !== '') && (member.username !== '') && (member.email !== '')) {
@@ -42,6 +48,11 @@ export default {
       }
     }
 
+    const clearMessage = () => {
+      messageToDisplay = ''
+      messageType.value = 'Info'
+    }
+
     onBeforeMount(() => {
       console.log('App.vue: onBeforeMount called')
     })
@@ -51,10 +62,14 @@ export default {
       axios.get('https://jsonplaceholder.typicode.com/users')
         .then((response) => {
           console.log('received response: ' + response)
+          messageType.value = 'Success'
+          messageToDisplay.value = 'Success: loaded cast data'
           cast.value = response.data
           console.log('Cast array in success callback: ' + cast.value)
         })
         .catch((error) => {
+          messageType.value = 'Error'
+          messageToDisplay.value = 'Error: unable to load cast data'
           console.log(error)
         })
         .finally((response) => {
@@ -68,7 +83,7 @@ export default {
       console.log('App.vue: onUnmounted called')
     })
 
-    return { message, cast, createMember }
+    return { message, cast, createMember, messageToDisplay, messageType, clearMessage }
   }
 }
 </script>

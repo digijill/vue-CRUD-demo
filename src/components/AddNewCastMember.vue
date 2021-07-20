@@ -63,7 +63,7 @@ input[type=text] {
   margin-left: auto;
 }
 
-input, button {
+input {
   float: left;
   width: 60vw;
   margin-top: 1rem;
