@@ -11,6 +11,7 @@ import { ref } from '@vue/reactivity'
 import ListCast from './ListCast.vue'
 import AddNewCastMember from './AddNewCastMember.vue'
 import { onBeforeMount, onBeforeUnmount, onMounted, onUnmounted } from '@vue/runtime-core'
+import axios from 'axios'
 
 export default {
   name: 'Content',
@@ -20,26 +21,13 @@ export default {
   },
   setup () {
     const message = ref('Cast of The French Dispatch')
-    const cast = ref([
-      {
-        id: 1,
-        name: 'Bill Murray',
-        username: 'ahowitzerjr',
-        email: 'ahowitzerjr@gmail.com'
-      },
-      {
-        id: 2,
-        name: 'Frances McDormond',
-        username: 'lkrementz',
-        email: 'lkrementz@gmail.com'
-      },
-      {
-        id: 3,
-        name: 'Tilda Swinton',
-        username: 'jberensen',
-        email: 'jberensen@gmail.com'
-      }
-    ])
+
+    // Each cast member object should contain the following fields:
+    // * id: integer
+    // * name: string
+    // * username: string
+    // * email: string
+    const cast = ref([])
 
     const createMember = (member) => {
       if ((member.name !== '') && (member.username !== '') && (member.email !== '')) {
@@ -59,6 +47,19 @@ export default {
     })
     onMounted(() => {
       console.log('App.vue: onMounted called')
+
+      axios.get('https://jsonplaceholder.typicode.com/users')
+        .then((response) => {
+          console.log('received response: ' + response)
+          cast.value = response.data
+          console.log('Cast array in success callback: ' + cast.value)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+        .finally((response) => {
+          console.log('finished!')
+        })
     })
     onBeforeUnmount(() => {
       console.log('App.vue: onBeforeUnmount called')
