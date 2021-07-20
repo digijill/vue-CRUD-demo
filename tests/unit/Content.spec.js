@@ -60,6 +60,10 @@ describe('Content.vue test wish successfull HTTP GET', () => {
     expect(wrapper.vm.cast[1].name).toMatch('Ervin Howell')
     expect(wrapper.vm.cast[1].username).toMatch('Antonette')
     expect(wrapper.vm.cast[1].email).toMatch('Shanna@melissa.tv')
+
+    // check that the banner status message indicates success
+    expect(wrapper.vm.messageToDisplay).toMatch('Success: loaded cast data')
+    expect(wrapper.vm.messageType).toMatch('Success')
   })
 })
 
@@ -91,5 +95,9 @@ describe('Content.vue test with failed HTTP GET', () => {
 
     // check that the error was logged to the console (overkill, really)
     expect(console.log).toHaveBeenNthCalledWith(3, new Error('BAD REQUEST'))
+
+    // check that the banner message indicates failure
+    expect(wrapper.vm.messageToDisplay).toMatch('Error: unable to load cast data')
+    expect(wrapper.vm.messageType).toMatch('Error')
   })
 })
