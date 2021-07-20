@@ -14,6 +14,7 @@ import Navigation from '@/components/Navigation.vue'
 import Content from '@/components/Content.vue'
 import Footer from '@/components/Footer.vue'
 import { ref } from '@vue/reactivity'
+import { onBeforeMount, onBeforeUnmount, onMounted, onUnmounted } from '@vue/runtime-core'
 
 export default {
   name: 'App',
@@ -26,6 +27,19 @@ export default {
   setup () {
     const title = ref('Vue CRUD Demo')
     const footerMessage = ref('A Vue 3 Story')
+
+    onBeforeMount(() => {
+      console.log('App.vue: onBeforeMount called')
+    })
+    onMounted(() => {
+      console.log('App.vue: onMounted called')
+    })
+    onBeforeUnmount(() => {
+      console.log('App.vue: onBeforeUnmount called')
+    })
+    onUnmounted(() => {
+      console.log('App.vue: onUnmounted called')
+    })
 
     return { title, footerMessage }
   }

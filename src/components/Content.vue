@@ -10,6 +10,7 @@
 import { ref } from '@vue/reactivity'
 import ListCast from './ListCast.vue'
 import AddNewCastMember from './AddNewCastMember.vue'
+import { onBeforeMount, onBeforeUnmount, onMounted, onUnmounted } from '@vue/runtime-core'
 
 export default {
   name: 'Content',
@@ -52,6 +53,19 @@ export default {
         cast.value.push(newMember)
       }
     }
+
+    onBeforeMount(() => {
+      console.log('App.vue: onBeforeMount called')
+    })
+    onMounted(() => {
+      console.log('App.vue: onMounted called')
+    })
+    onBeforeUnmount(() => {
+      console.log('App.vue: onBeforeUnmount called')
+    })
+    onUnmounted(() => {
+      console.log('App.vue: onUnmounted called')
+    })
 
     return { message, cast, createMember }
   }
