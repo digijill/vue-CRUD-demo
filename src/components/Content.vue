@@ -31,20 +31,38 @@ export default {
     // * username: string
     // * email: string
     const cast = ref([])
+    const largestCastIndex = ref(0)
 
     let messageToDisplay = ref('')
     const messageType = ref('Info')
 
     const createMember = (member) => {
       if ((member.name !== '') && (member.username !== '') && (member.email !== '')) {
-        var newMember = {
+        var newCastMember = {
+          // todo: un-hippify this for a real API
           id: cast.value.length + 1,
           name: member.name,
           username: member.username,
           email: member.email
         }
 
-        cast.value.push(newMember)
+        axios.post('https://jsonplaceholder.typicode.com/users', newCastMember)
+          .then((response) => {
+            messageType.value = 'Success'
+            messageToDisplay.value = 'Success: member data was saved'
+
+            cast.value.push(newCastMember)
+
+            largestCastIndex.value++
+          })
+          .catch((error) => {
+            messageType.value = 'Error'
+            messageToDisplay.value = 'Error: unable to save cast member data'
+            console.log(error)
+          })
+          .finally((response) => {
+            console.log('HTTP POST finished')
+          })
       }
     }
 
@@ -65,6 +83,7 @@ export default {
           messageType.value = 'Success'
           messageToDisplay.value = 'Success: loaded cast data'
           cast.value = response.data
+          largestCastIndex.value = cast.value.length
           console.log('Cast array in success callback: ' + cast.value)
         })
         .catch((error) => {

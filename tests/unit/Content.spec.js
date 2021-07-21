@@ -8,7 +8,7 @@ global.console.log = jest.fn()
 // mocking
 jest.mock('axios')
 
-describe('Content.vue test wish successfull HTTP GET', () => {
+describe('Content.vue test with successful HTTP GET and POST', () => {
   let wrapper = null
 
   beforeEach(() => {
@@ -27,9 +27,21 @@ describe('Content.vue test wish successfull HTTP GET', () => {
           email: 'Shanna@melissa.tv'
         }
       ]
-    }
+    };
+
+    const mockPostResponse = {
+      data: [
+        {
+          id: 3,
+          name: 'Bill',
+          username: 'ahowitzer',
+          email: 'ahowitzer@april.biz'
+        }
+      ]
+    };
 
     axios.get.mockResolvedValue(mockGetResponse)
+    axios.post.mockResolvedValue(mockPostResponse)
     wrapper = shallowMount(Content)
   })
 
@@ -64,6 +76,88 @@ describe('Content.vue test wish successfull HTTP GET', () => {
     // check that the banner status message indicates success
     expect(wrapper.vm.messageToDisplay).toMatch('Success: loaded cast data')
     expect(wrapper.vm.messageType).toMatch('Success')
+  })
+
+  it('saves the new cast member data', async () => {
+    var newCastMember3 = {
+      id: 3,
+      name: 'Bill',
+      username: 'ahowitzer',
+      email: 'ahowitzer@april.biz'
+    }
+
+    wrapper.vm.createMember(newCastMember3)
+    await flushPromises()
+
+    expect(axios.post).toHaveBeenCalledTimes(1)
+    expect(axios.post).toBeCalledWith('https://jsonplaceholder.typicode.com/users', newCastMember3)
+
+    expect(wrapper.vm.cast.length).toEqual(3)
+    expect(wrapper.vm.messageType).toMatch('Success')
+    expect(wrapper.vm.messageToDisplay).toMatch('Success: member data was saved')
+  })
+})
+
+describe('Content.vue test with successful HTTP GET and failed HTTP POST', () => {
+  let wrapper = null
+
+  beforeEach(() => {
+    const mockGetResponse = {
+      data: [
+        {
+          id: 1,
+          name: 'Leanne Graham',
+          username: 'Bret',
+          email: 'Sincere@april.biz'
+        },
+        {
+          id: 2,
+          name: 'Ervin Howell',
+          username: 'Antonette',
+          email: 'Shanna@melissa.tv'
+        }
+      ]
+    };
+
+    // successful GET response
+    axios.get.mockResolvedValue(mockGetResponse)
+
+    // failed POST response
+    axios.post.mockRejectedValue(new Error('BAD CREATE'))
+
+    // render the component
+    wrapper = shallowMount(Content)
+  });
+
+  afterEach(() => {
+    wrapper.unmount()
+    jest.resetModules()
+    jest.clearAllMocks()
+  });
+
+  it('does not save the new cast member data on failed HTTP POST call', async () => {
+    var newCastMember3 = {
+      id: 3,
+      name: 'Bill',
+      username: 'ahowitzer',
+      email: 'ahowitzer@april.biz'
+    }
+
+    expect(axios.get).toHaveBeenCalledTimes(1)
+    expect(axios.get).toBeCalledWith('https://jsonplaceholder.typicode.com/users')
+    expect(wrapper.vm.cast.length).toEqual(2)
+
+    wrapper.vm.createMember(newCastMember3)
+
+    await flushPromises()
+
+    expect(axios.post).toHaveBeenCalledTimes(1)
+    expect(axios.post).toBeCalledWith('https://jsonplaceholder.typicode.com/users', newCastMember3)
+
+    expect(wrapper.vm.cast.length).toEqual(2)
+    expect(wrapper.vm.messageType).toMatch('Error')
+    expect(wrapper.vm.messageToDisplay).toMatch('Error: unable to save cast member data')
+
   })
 })
 
@@ -101,3 +195,4 @@ describe('Content.vue test with failed HTTP GET', () => {
     expect(wrapper.vm.messageType).toMatch('Error')
   })
 })
+
